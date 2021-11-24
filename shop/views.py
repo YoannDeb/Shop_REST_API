@@ -1,4 +1,6 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from shop.models import Category, Product, Article
 from shop.serializers import CategoryListSerializer, CategoryDetailSerializer, ProductListSerializer, ProductDetailSerializer, ArticleSerializer
@@ -20,6 +22,11 @@ class CategoryViewSet(ReadOnlyModelViewSet):
             return self.detail_serializer_class
         return super().get_serializer_class()
 
+    @action(detail=True, methods=['post'])
+    def disable(self, request, pk):
+        self.get_object().disable()
+        return Response()
+
 
 class ProductViewSet(ReadOnlyModelViewSet):
 
@@ -39,6 +46,11 @@ class ProductViewSet(ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return self.detail_serializer_class
         return super().get_serializer_class()
+
+    @action(detail=True, methods=['post'])
+    def disable(self, request, pk):
+        self.get_object().disable()
+        return Response()
 
 
 class ArticleViewSet(ReadOnlyModelViewSet):
