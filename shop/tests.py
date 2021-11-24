@@ -28,16 +28,22 @@ class TestCategory(ShopAPITestCase):
         Category.objects.create(name='Légumes', active=False)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        expected = [
-            {
-                'id': category.pk,
-                'name': category.name,
-                'date_created': self.format_datetime(category.date_created),
-                'date_updated': self.format_datetime(category.date_updated),
-                'description': category.description,
-                'active': category.active,
-            }
-        ]
+        expected = {
+            'count': 1,
+            'next': None,
+            'previous': None,
+            'results': [
+                {
+                    'id': category.pk,
+                    'name': category.name,
+                    'date_created': self.format_datetime(category.date_created),
+                    'date_updated': self.format_datetime(category.date_updated),
+                    'description': category.description,
+                    'active': category.active,
+                    'products': []
+                }
+            ]
+        }
         self.assertEqual(expected, response.json())
 
     def test_create(self):
@@ -56,17 +62,23 @@ class TestProduct(ShopAPITestCase):
         Product.objects.create(name='Banane', active=False, category=category)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        expected = [
-            {
-                'id': product.pk,
-                'name': product.name,
-                'date_created': self.format_datetime(product.date_created),
-                'date_updated': self.format_datetime(product.date_updated),
-                'category_id': product.category.pk,
-                'description': product.description,
-                'active': product.active,
-            }
-        ]
+        expected = {
+            'count': 1,
+            'next': None,
+            'previous': None,
+            'results': [
+                {
+                    'id': product.pk,
+                    'date_created': self.format_datetime(product.date_created),
+                    'date_updated': self.format_datetime(product.date_updated),
+                    'name': product.name,
+                    'category_id': product.category.pk,
+                    'description': product.description,
+                    'active': product.active,
+                    'articles': []
+                }
+            ]
+        }
         self.assertEqual(expected, response.json())
 
     def test_create(self):
@@ -87,18 +99,23 @@ class TestArticles(ShopAPITestCase):
         Article.objects.create(name='2kg', active=False, product=product, price='2.50')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        expected = [
-            {
-                'id': article.pk,
-                'date_created': self.format_datetime(article.date_created),
-                'date_updated': self.format_datetime(article.date_updated),
-                'name': article.name,
-                'product_id': article.product.pk,
-                'price': article.price,
-                'description': article.description,
-                'active': article.active,
-            }
-        ]
+        expected = {
+            'count': 1,
+            'next': None,
+            'previous': None,
+            'results': [
+                {
+                    'id': article.pk,
+                    'date_created': self.format_datetime(article.date_created),
+                    'date_updated': self.format_datetime(article.date_updated),
+                    'name': article.name,
+                    'product_id': article.product.pk,
+                    'price': article.price,
+                    'description': article.description,
+                    'active': article.active
+                }
+            ]
+        }
         self.assertEqual(expected, response.json())
 
     def test_create(self):
