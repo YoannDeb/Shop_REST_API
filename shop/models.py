@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 
 
 class Category(models.Model):
@@ -12,6 +12,15 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    @transaction.atomic
+    def disable(self):
+        if self.active:
+            self.active = False
+            self.save()
+            self.products.update(active=False)
+            # for product in self.products:
+            #     product.articles.update(active=False)
 
 
 class Product(models.Model):
@@ -27,6 +36,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @transaction.atomic
+    def disable(self):
+        if self.active:
+            self.active = False
+            self.save()
+            self.articles.update(active=False)
 
 
 class Article(models.Model):
