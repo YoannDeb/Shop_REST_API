@@ -1,9 +1,31 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from shop.models import Category, Product, Article
 from shop.serializers import CategoryListSerializer, CategoryDetailSerializer, ProductListSerializer, ProductDetailSerializer, ArticleSerializer
+
+
+class AdminCategoryViewSet(ModelViewSet):
+
+    serializer_class = CategoryListSerializer
+    detail_serializer_class = CategoryDetailSerializer
+
+    def get_queryset(self):
+        queryset = Category.objects.all()
+        if self.request.GET.get('show_inactive') != 'true':
+            queryset = queryset.filter(active=True)
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return self.detail_serializer_class
+        return super().get_serializer_class()
+
+    @action(detail=True, methods=['post'])
+    def disable(self, request, pk):
+        self.get_object().disable()
+        return Response()
 
 
 class CategoryViewSet(ReadOnlyModelViewSet):
