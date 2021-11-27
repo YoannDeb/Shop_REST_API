@@ -9,6 +9,11 @@ class ArticleSerializer(ModelSerializer):
         model = Article
         fields = ['id', 'date_created', 'date_updated', 'name', 'price', 'product_id', 'description', 'active']
 
+    def validate_name(self, value):
+        if Article.objects.filter(name=value).exists():
+            raise ValidationError('Article already exists')
+        return value
+
 
 class ProductListSerializer(ModelSerializer):
 
@@ -17,8 +22,8 @@ class ProductListSerializer(ModelSerializer):
         fields = ['id', 'date_created', 'date_updated', 'name', 'description', 'active']
 
     def validate_name(self, value):
-        if Category.objects.filter(name=value).exists():
-            raise ValidationError('Category already exists')
+        if Product.objects.filter(name=value).exists():
+            raise ValidationError('Product already exists')
         return value
 
 
@@ -42,6 +47,16 @@ class CategoryListSerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'date_created', 'date_updated', 'name', 'description', 'active']
+
+    def validate_name(self, value):
+        if Category.objects.filter(name=value).exists():
+            raise ValidationError('Category already exists')
+        return value
+
+    def validate(self, data):
+        if data['name'] not in data['description']:
+            raise ValidationError('Name must be in description')
+        return data
 
 
 class CategoryDetailSerializer(ModelSerializer):
