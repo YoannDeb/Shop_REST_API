@@ -7,11 +7,16 @@ class ArticleSerializer(ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ['id', 'date_created', 'date_updated', 'name', 'price', 'product_id', 'description', 'active']
+        fields = ['id', 'date_created', 'date_updated', 'name', 'price', 'product', 'description', 'active']
 
-    def validate_name(self, value):
-        if Article.objects.filter(name=value).exists():
-            raise ValidationError('Article already exists')
+    def validate_price(self, value):
+        if float(value) < 1:
+            raise ValidationError('Article price must be greater than 1€')
+        return value
+
+    def validate_product(self, value):
+        if not value.active:
+            raise ValidationError('Associated product must be active')
         return value
 
 
@@ -33,7 +38,7 @@ class ProductDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'date_created', 'date_updated', 'name', 'category_id', 'description', 'active', 'articles']
+        fields = ['id', 'date_created', 'date_updated', 'name', 'category', 'description', 'active', 'articles']
 
     def get_articles(self, instance):
         queryset = instance.articles.filter(active=True)
