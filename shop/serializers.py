@@ -1,13 +1,17 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, ValidationError
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, ValidationError, CharField, IntegerField
 
 from shop.models import Category, Product, Article
 
 
 class ArticleSerializer(ModelSerializer):
 
+    product_name = CharField(read_only=True, source='product.name')
+    category = IntegerField(read_only=True, source='product.category.id')
+    category_name = CharField(read_only=True, source='product.category.name')
+
     class Meta:
         model = Article
-        fields = ['id', 'date_created', 'date_updated', 'name', 'price', 'product', 'description', 'active']
+        fields = ['id', 'date_created', 'date_updated', 'name', 'price', 'product', 'product_name', 'category', 'category_name', 'description', 'active']
 
     def validate_price(self, value):
         if float(value) < 1:
@@ -35,10 +39,11 @@ class ProductListSerializer(ModelSerializer):
 class ProductDetailSerializer(ModelSerializer):
 
     articles = SerializerMethodField()
+    category_name = CharField(read_only=True, source='category.name')
 
     class Meta:
         model = Product
-        fields = ['id', 'date_created', 'date_updated', 'name', 'category', 'description', 'active', 'articles']
+        fields = ['id', 'date_created', 'date_updated', 'name', 'category', 'category_name', 'description', 'active', 'articles']
 
     def get_articles(self, instance):
         queryset = instance.articles.filter(active=True)
