@@ -10,15 +10,10 @@ class AdminCategoryViewSet(ModelViewSet):
 
     serializer_class = CategoryListSerializer
     detail_serializer_class = CategoryDetailSerializer
-
-    def get_queryset(self):
-        queryset = Category.objects.all()
-        if self.request.GET.get('show_inactive') != 'true':
-            queryset = queryset.filter(active=True)
-        return queryset
+    queryset = Category.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
+        if self.action == 'retrieve' and self.detail_serializer_class:
             return self.detail_serializer_class
         return super().get_serializer_class()
 
@@ -75,7 +70,7 @@ class ProductViewSet(ReadOnlyModelViewSet):
         return Response()
 
 
-class ArticleViewSet(ReadOnlyModelViewSet):
+class AdminArticleViewSet(ModelViewSet):
 
     serializer_class = ArticleSerializer
 
@@ -87,5 +82,11 @@ class ArticleViewSet(ReadOnlyModelViewSet):
         if product_id:
             queryset = queryset.filter(product_id=product_id)
         return queryset
+
+
+class ArticleViewSet(ReadOnlyModelViewSet):
+
+    serializer_class = ArticleSerializer
+    queryset = Article.objects.all()
 
 
