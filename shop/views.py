@@ -73,6 +73,12 @@ class ProductViewSet(ReadOnlyModelViewSet):
 class AdminArticleViewSet(ModelViewSet):
 
     serializer_class = ArticleSerializer
+    queryset = Article.objects.all()
+
+
+class ArticleViewSet(ReadOnlyModelViewSet):
+
+    serializer_class = ArticleSerializer
 
     def get_queryset(self):
         queryset = Article.objects.all()
@@ -82,11 +88,5 @@ class AdminArticleViewSet(ModelViewSet):
         if product_id:
             queryset = queryset.filter(product_id=product_id)
         return queryset
-
-
-class ArticleViewSet(ReadOnlyModelViewSet):
-
-    serializer_class = ArticleSerializer
-    queryset = Article.objects.all()
 
 
