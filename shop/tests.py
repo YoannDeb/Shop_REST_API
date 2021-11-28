@@ -1,7 +1,10 @@
+from unittest import mock
+
 from django.urls import reverse_lazy
 from rest_framework.test import APITestCase
 
 from shop.models import Category, Product, Article
+from shop.mock import mock_openfoodfact_success, ECOSCORE_GRADE
 
 
 class ShopAPITestCase(APITestCase):
@@ -74,6 +77,7 @@ class TestProduct(ShopAPITestCase):
                     'name': product.name,
                     'category_id': product.category.pk,
                     'description': product.description,
+                    'ecoscore': ECOSCORE_GRADE,
                     'active': product.active,
                     'articles': []
                 }
@@ -92,6 +96,7 @@ class TestProduct(ShopAPITestCase):
 class TestArticles(ShopAPITestCase):
     url = reverse_lazy('article-list')
 
+    @mock.patch('shop.models.Product.call_external_api', mock_openfoodfact_success)
     def test_list(self):
         category = Category.objects.create(name='Fruits', active=True)
         product = Product.objects.create(name='Pomme', active=True, category=category)
@@ -118,6 +123,7 @@ class TestArticles(ShopAPITestCase):
         }
         self.assertEqual(expected, response.json())
 
+    @mock.patch('shop.models.Product.call_external_api', mock_openfoodfact_success)
     def test_create(self):
         category = Category.objects.create(name='Fruits', active=True)
         product = Product.objects.create(name='Pomme', active=True, category=category)
