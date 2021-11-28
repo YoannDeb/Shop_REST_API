@@ -28,7 +28,7 @@ class ProductListSerializer(ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'date_created', 'date_updated', 'name', 'description', 'active']
+        fields = ['id', 'date_created', 'date_updated', 'name', 'description', 'ecoscore', 'active']
 
     def validate_name(self, value):
         if Product.objects.filter(name=value).exists():
