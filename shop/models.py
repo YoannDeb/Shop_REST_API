@@ -2,6 +2,7 @@ from django.db import models, transaction
 
 import requests
 
+
 class Category(models.Model):
 
     date_created = models.DateTimeField(auto_now_add=True)
