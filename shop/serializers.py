@@ -4,7 +4,6 @@ from shop.models import Category, Product, Article
 
 
 class ArticleSerializer(ModelSerializer):
-
     product_name = CharField(read_only=True, source='product.name')
     category = IntegerField(read_only=True, source='product.category.id')
     category_name = CharField(read_only=True, source='product.category.name')
@@ -25,7 +24,6 @@ class ArticleSerializer(ModelSerializer):
 
 
 class ProductListSerializer(ModelSerializer):
-
     class Meta:
         model = Product
         fields = ['id', 'date_created', 'date_updated', 'name', 'description', 'ecoscore', 'active']
@@ -37,7 +35,6 @@ class ProductListSerializer(ModelSerializer):
 
 
 class ProductDetailSerializer(ModelSerializer):
-
     articles = SerializerMethodField()
     category_name = CharField(read_only=True, source='category.name')
 
@@ -53,7 +50,6 @@ class ProductDetailSerializer(ModelSerializer):
 
 
 class CategoryListSerializer(ModelSerializer):
-
     class Meta:
         model = Category
         fields = ['id', 'date_created', 'date_updated', 'name', 'description', 'active']
@@ -70,7 +66,6 @@ class CategoryListSerializer(ModelSerializer):
 
 
 class CategoryDetailSerializer(ModelSerializer):
-
     products = SerializerMethodField()
 
     class Meta:
