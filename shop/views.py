@@ -7,7 +7,6 @@ from shop.serializers import CategoryListSerializer, CategoryDetailSerializer, P
 
 
 class AdminCategoryViewSet(ModelViewSet):
-
     serializer_class = CategoryListSerializer
     detail_serializer_class = CategoryDetailSerializer
     queryset = Category.objects.all()
@@ -24,7 +23,6 @@ class AdminCategoryViewSet(ModelViewSet):
 
 
 class CategoryViewSet(ReadOnlyModelViewSet):
-
     serializer_class = CategoryListSerializer
     detail_serializer_class = CategoryDetailSerializer
 
@@ -46,7 +44,6 @@ class CategoryViewSet(ReadOnlyModelViewSet):
 
 
 class ProductViewSet(ReadOnlyModelViewSet):
-
     serializer_class = ProductListSerializer
     detail_serializer_class = ProductDetailSerializer
 
@@ -71,13 +68,11 @@ class ProductViewSet(ReadOnlyModelViewSet):
 
 
 class AdminArticleViewSet(ModelViewSet):
-
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
 
 
 class ArticleViewSet(ReadOnlyModelViewSet):
-
     serializer_class = ArticleSerializer
 
     def get_queryset(self):
